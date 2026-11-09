@@ -1,0 +1,125 @@
+[package]
+repository = "https://github.com/enz1m/task-manager"
+name = "task-manager-app"
+version = "0.1.0"
+authors = ["enzUI contributors"]
+edition = "2024"
+publish = false
+license = "MIT"
+description = "Monitor and control Linux processes and services"
+# Keep the MSRV aligned with the framework workspace.
+rust-version = "1.95"
+
+[workspace]
+resolver = "3"
+
+[features]
+x11 = ["iced/x11", "enzui-widgets/x11"]
+# Center requires an enrolled app credential.
+center = ["dep:enzui-agent", "dep:serde", "dep:serde_json"]
+
+
+[dependencies]
+enzui-activity = { git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+iced = { default-features = false, features = ["wgpu", "tiny-skia", "crisp", "web-colors", "thread-pool", "linux-theme-detection", "wayland", "canvas", "svg", "a11y", "tokio"], git = "https://github.com/enz1m/enzim-iced.git", rev = "67f991b7442cbd79821141069c3b864cc12413f2" }
+iced_renderer = { default-features = false, git = "https://github.com/enz1m/enzim-iced.git", rev = "67f991b7442cbd79821141069c3b864cc12413f2" }
+enzui-core = { features = ["accesskit", "perf-counter", "activation-native-iced"], git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+enzui-services = { git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+enzui-theme = { git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+enzui-widgets = { features = ["application-dbus"], git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+enzui-icons = { git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+enzui-agent = { features = ["iced-consumer"], optional = true, git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
+tokio = { version = "1", features = ["time", "rt"] }
+libc = "0.2"
+log = "0.4"
+# Use pidfds to keep PID reuse from redirecting signal delivery.
+rustix = { version = "1.1", features = ["process"] }
+
+[dev-dependencies]
+enzui-test-support = { git = "https://github.com/enz1m/enzui.git", tag = "v0.1.0-alpha.1" }
+
+iced_test = { git = "https://github.com/enz1m/enzim-iced.git", rev = "67f991b7442cbd79821141069c3b864cc12413f2" }
+
+[patch.crates-io]
+zbus_macros = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "815a9ca7b64aa24e14ccb6ea3f7eda97ef7bbc8a" }
+zbus_names = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "815a9ca7b64aa24e14ccb6ea3f7eda97ef7bbc8a" }
+zvariant = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "815a9ca7b64aa24e14ccb6ea3f7eda97ef7bbc8a" }
+zvariant_derive = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "815a9ca7b64aa24e14ccb6ea3f7eda97ef7bbc8a" }
+zvariant_utils = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "815a9ca7b64aa24e14ccb6ea3f7eda97ef7bbc8a" }
+zbus = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "815a9ca7b64aa24e14ccb6ea3f7eda97ef7bbc8a" }
+winit = { git = "https://github.com/enz1m/enzim-winit.git", rev = "f6ce16941bf815a438db7e628ab1126ce48e31dd" }
+
+# Keep these aligned with the framework lint policy.
+[lints]
+workspace = true
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+unexpected_cfgs = "warn"
+missing_docs = "warn"
+unreachable_pub = "warn"
+
+[workspace.lints.clippy]
+unwrap_used = "warn"
+dbg_macro = "warn"
+todo = "warn"
+unimplemented = "warn"
+print_stdout = "warn"
+mem_forget = "warn"
+undocumented_unsafe_blocks = "warn"
+return_self_not_must_use = "warn"
+clone_on_ref_ptr = "warn"
+redundant_clone = "warn"
+trivially_copy_pass_by_ref = "warn"
+large_stack_arrays = "warn"
+ref_option = "warn"
+implicit_clone = "warn"
+assigning_clones = "warn"
+or_fun_call = "warn"
+cast_lossless = "warn"
+significant_drop_in_scrutinee = "warn"
+manual_let_else = "warn"
+map_unwrap_or = "warn"
+redundant_closure_for_method_calls = "warn"
+semicolon_if_nothing_returned = "warn"
+uninlined_format_args = "warn"
+unnested_or_patterns = "warn"
+explicit_iter_loop = "warn"
+ignored_unit_patterns = "warn"
+unused_async = "warn"
+string_slice = "warn"
+unwrap_in_result = "warn"
+panic = "warn"
+iter_over_hash_type = "warn"
+multiple_unsafe_ops_per_block = "warn"
+allow_attributes_without_reason = "warn"
+missing_errors_doc = "warn"
+missing_panics_doc = "warn"
+missing_assert_message = "warn"
+str_to_string = "warn"
+format_push_string = "warn"
+redundant_type_annotations = "warn"
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.test]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+opt-level = 2
+debug = 0
+incremental = false
+
+[profile.test.package."*"]
+opt-level = 2
+debug = 0
+incremental = false
+
+[profile.release]
+lto = false
+codegen-units = 16
+debug = 0
+strip = "debuginfo"

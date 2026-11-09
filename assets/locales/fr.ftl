@@ -1,0 +1,274 @@
+# Application messages; absent keys intentionally use English fallback.
+tm-action-worker-unavailable-45894a = Exécuteur de l’action indisponible
+tm-actions-ff8059 = Actions
+tm-activating-5bbd54 = activation
+tm-active-968796 = actif
+tm-adapter-0252b8 = Adaptateur
+tm-all-a52ace = Tous
+tm-application-e7ad52 = Application
+tm-applications-98e33b = Applications
+tm-authoritative-unit-state-unavailable-7f0652 = état de référence de l’unité indisponible
+tm-available-e67444 = Disponible
+tm-background-service-0c0a7e = Service en arrière-plan
+tm-blocked-captured-target-uid-changed-nothing-signalle-37efba = Opération bloquée : propriétaire du processus modifié ; aucun signal envoyé
+tm-blocked-process-sample-is-stale-or-closing-nothing-s-5c6802 = Opération bloquée : relevé trop ancien ou fermeture en cours ; aucun signal envoyé
+tm-blocked-target-is-gone-replaced-or-protected-8e9a6c = Opération bloquée : cible disparue, remplacée ou protégée
+tm-blocked-target-is-protected-nothing-signalled-543262 = Opération bloquée : processus protégé ; aucun signal envoyé
+tm-blocked-target-pid-was-reused-nothing-signalled-90bf7b = Opération bloquée : le PID a été réutilisé ; aucun signal envoyé
+tm-blocked-target-vanished-nothing-signalled-71fda2 = Opération bloquée : le processus a disparu ; aucun signal envoyé
+tm-cached-a251c1 = En cache
+tm-cancel-19766e = Annuler
+tm-cancel-action-a91975 = Annuler l’action
+tm-cancel-pending-action-6c45d7 = Annuler l’action en attente
+tm-cancelled-before-mutation-was-wired-3d98a7 = Annulé avant l’envoi de la commande
+tm-captured-target-uid-changed-nothing-signalled-1da713 = Propriétaire du processus modifié ; aucun signal envoyé
+tm-clear-search-3b7ea5 = Effacer la recherche
+tm-click-to-copy-6fdb8f = Cliquer pour copier
+tm-close-details-edc82d = Fermer les détails
+tm-closing-retaining-this-window-until-the-newest-page-8241e2 = Fermeture : attente de l’enregistrement définitif de la page et de la fin des opérations
+tm-collapse-be6eb1 = Réduire
+tm-collecting-3c0e2e = Collecte…
+tm-collection-stopped-862e62 = Collecte arrêtée
+tm-command-line-c925a1 = Ligne de commande
+tm-copied-all-log-text-d36ab9 = Journal entier copié
+tm-copied-command-line-8eac85 = Ligne de commande copiée
+tm-copied-interface-name-d9976e = Nom de l’interface copié
+tm-copied-ip-address-c7e5c8 = Adresse IP copiée
+tm-copied-mount-point-3af919 = Point de montage copié
+tm-copied-pid-0aa111 = PID copié
+tm-copied-selected-log-text-e4e71f = Texte sélectionné du journal copié
+tm-copied-service-name-f81c80 = Nom du service copié
+tm-copied-unit-file-path-caea22 = Chemin du fichier d’unité copié
+tm-copied-working-directory-c628c3 = Dossier de travail copié
+tm-copy-all-7a1861 = Tout copier
+tm-copy-all-log-text-to-clipboard-c3b4dd = Copier tout le journal dans le presse-papiers
+tm-copy-pid-175c2e = Copier le PID
+tm-copy-service-name-33e7cd = Copier le nom du service
+tm-copy-unit-file-path-1e079b = Copier le chemin du fichier d’unité
+tm-core-0d45f5 = cœur
+tm-cores-f664a2 = cœurs
+tm-cpu-db9a4c = Processeur
+tm-cpu-model-2242f4 = Modèle du processeur
+tm-cpu-temperature-b601f4 = Température du processeur
+tm-cpu-topology-524802 = Topologie du processeur
+tm-deactivating-fb0c7d = désactivation
+tm-dead-28a3a5 = arrêté
+tm-deadline-exceeded-45169e = délai dépassé
+tm-deadline-exceeded-no-success-claimed-0f1e57 = Délai dépassé ; réussite non confirmée
+tm-description-526e00 = Description
+tm-details-45989d = Détails
+tm-device-6ba0bd = Périphérique
+tm-device-details-88d804 = détails du matériel
+tm-disabled-75081b = Désactivé
+tm-disk-340e0c = Disque
+tm-disk-activity-24c368 = Activité du disque
+tm-down-908aec = déconnectée
+tm-end-f4db1e = Terminer
+tm-end-force-kill-unavailable-for-this-process-3ad5c8 = Impossible de terminer ou de forcer l’arrêt de ce processus
+tm-end-process-4b30d6 = Terminer le processus
+tm-exited-b25199 = terminé
+tm-expand-07548c = Développer
+tm-failed-031a8f = Échec
+tm-failed-5d28a9 = échec
+tm-filesystem-8230c6 = Système de fichiers
+tm-filter-638e24 = Filtrer
+tm-filter-rows-1adca7 = Filtrer les lignes
+tm-force-kill-8f93b7 = Forcer l’arrêt
+tm-free-f411a1 = Libre
+tm-gpu-ea4952 = Processeur graphique
+tm-hide-details-c9722a = Masquer les détails
+tm-idle-ab0171 = Inactif
+tm-inactive-d10226 = inactif
+tm-interface-c26b3e = Interface
+tm-interface-state-ec002a = État de l’interface
+tm-invalid-canonical-unit-name-ad4a49 = nom d’unité canonique invalide
+tm-ip-address-0302a4 = Adresse IP
+tm-keep-open-71596e = Garder ouvert
+tm-keyboard-shortcuts-59cdaa = Raccourcis clavier
+tm-link-speed-631830 = Vitesse de liaison
+tm-load-8a6bdb = Chargement
+tm-loaded-2cab95 = chargé
+tm-loading-ba3bbb = Chargement…
+tm-loading-processes-e86299 = Chargement des processus
+tm-loading-services-a011ab = Chargement des services
+tm-logical-ac7f39 = logiques
+tm-logical-cpus-c64af8 = Processeurs logiques
+tm-logs-ea2100 = Journaux
+tm-logs-f4c1b6 = Journaux…
+tm-maintenance-8589c6 = maintenance
+tm-masked-30e15b = masqué
+tm-memory-c3963a = Mémoire
+tm-mount-d56058 = Montage
+tm-mount-point-6f934e = Point de montage
+tm-name-dcd1d5 = Nom
+tm-network-1744b9 = Réseau
+tm-network-interface-b55b19 = Interface réseau
+tm-no-data-3b41ba = Aucune donnée
+tm-not-found-f507a5 = introuvable
+tm-nothing-to-show-bf083e = Rien à afficher
+tm-now-ed5eb9 = maintenant
+tm-of-total-ram-648798 = De la mémoire totale
+tm-open-files-3faecf = Fichiers ouverts
+tm-performance-442ade = Performances
+tm-permission-denied-b77f13 = permission refusée
+tm-pid-3f302a = PID
+tm-process-19ed40 = processus
+tm-process-signalling-unavailable-2f0509 = Envoi de signal indisponible
+tm-processes-4a81a7 = Processus
+tm-processes-abd4c4 = processus
+tm-processes-unavailable-437bec = Processus indisponibles
+tm-read-9b9a8d = Lecture
+tm-read-speed-10082f = Vitesse de lecture
+tm-receive-bac9d1 = Réception
+tm-received-49f19b = Reçu
+tm-refresh-0e9161 = Actualiser
+tm-refreshing-0b61ac = actualisation
+tm-refreshing-1c0def = Actualisation…
+tm-reloading-117479 = rechargement
+tm-resources-e89b30 = Ressources
+tm-restart-6b983a = Redémarrer
+tm-retry-942087 = Réessayer
+tm-retry-later-005e12 = Réessayer plus tard
+tm-retry-page-save-8de282 = Réessayer l’enregistrement de la page
+tm-running-c071cf = en cours
+tm-running-f4ccae = En cours
+tm-s-043a71 = s
+tm-search-49c266 = Rechercher
+tm-search-name-or-description-476dc4 = Rechercher un nom ou une description…
+tm-search-name-pid-or-user-4c46c9 = Rechercher un nom, un PID ou un utilisateur…
+tm-select-a-process-to-inspect-it-fe49f0 = Sélectionnez un processus pour voir ses détails
+tm-select-a-service-to-inspect-it-32953c = Sélectionnez un service pour voir ses détails
+tm-select-process-1d6cb5 = Sélectionner le processus
+tm-send-f6f468 = Envoi
+tm-sent-c16bc8 = Envoyé
+tm-service-9df6b0 = service
+tm-service-command-or-unit-failed-99f8e7 = échec de la commande ou de l’unité
+tm-service-log-text-f5b48d = Texte du journal du service
+tm-service-manager-or-helper-unavailable-f46e86 = gestionnaire de services ou outil indisponible
+tm-services-604dce = Services
+tm-services-ef1c4b = services
+tm-services-unavailable-229da2 = Services indisponibles
+tm-session-owner-joined-waiting-for-remaining-owners-58e149 = État enregistré ; attente des autres opérations
+tm-show-details-1af77e = Afficher les détails
+tm-show-in-inspector-c1441d = Afficher les détails
+tm-signal-failed-nothing-signalled-65276a = Échec de l’envoi : aucun signal envoyé
+tm-sleeping-12ff39 = En veille
+tm-sleeping-546f04 = en veille
+tm-socket-47dd56 = socket
+tm-sockets-f24383 = sockets
+tm-source-0e570c = Source
+tm-start-e4bb9f = Démarrer
+tm-state-a3b50c = État
+tm-status-920e41 = État
+tm-stop-cae7d5 = Arrêter
+tm-stopped-1a4f63 = Arrêté
+tm-stopped-8322e8 = arrêté
+tm-sub-state-69beb8 = Sous-état
+tm-swap-6ec282 = Mémoire d’échange
+tm-swap-free-3b8c65 = Échange libre
+tm-swap-total-f1a612 = Échange total
+tm-swap-used-5d010c = Échange utilisé
+tm-system-6725e7 = Système
+tm-system-activity-af94d7 = Activité du système
+tm-system-activity-d31160 = activité du système
+tm-system-data-bf58bd = données du système
+tm-system-process-04cdf7 = Processus système
+tm-target-vanished-before-signal-c4e470 = Le processus a disparu avant l’envoi du signal
+tm-task-manager-58d65c = Gestionnaire des tâches
+tm-temperature-b958ce = Température
+tm-the-process-list-is-warming-in-the-background-3fe709 = La liste des processus se prépare en arrière-plan.
+tm-the-service-list-is-warming-in-the-background-a6bdb3 = La liste des services se prépare en arrière-plan.
+tm-this-is-a-system-process-ending-it-needs-elevated-pr-60beec = ce processus système nécessite des droits supplémentaires pour être terminé
+tm-this-process-is-the-system-s-init-or-this-task-manag-11ac97 = ce processus est l’init du système ou le gestionnaire des tâches
+tm-threads-3e42e3 = Fils
+tm-total-c9b3c3 = Total
+tm-try-a-different-query-or-clear-the-search-to-see-eve-549682 = Essayez une autre recherche ou effacez-la pour tout afficher.
+tm-type-baaddf = Type
+tm-unavailable-ca1844 = Indisponible
+tm-unit-file-3217de = Fichier d’unité
+tm-unit-file-path-b2071b = Chemin du fichier d’unité
+tm-unit-identity-or-prior-state-changed-aad133 = identité ou état précédent de l’unité modifié
+tm-unit-not-found-bc3781 = unité introuvable
+tm-unknown-b23a6a = inconnu
+tm-unknown-b764cd = Inconnu
+tm-up-75a288 = connectée
+tm-uptime-d63ab4 = Durée de fonctionnement
+tm-used-ae7d8d = Utilisée
+tm-user-b512d9 = Utilisateur
+tm-utilization-dee34f = Utilisation
+tm-utilization-per-logical-processor-1b7e13 = Utilisation par processeur logique
+tm-views-69c404 = Vues
+tm-waiting-for-fresh-data-1fc61a = En attente de données récentes
+tm-waiting-for-snapshot-47bb64 = En attente d’un relevé
+tm-working-directory-865e85 = Dossier de travail
+tm-write-3f0092 = Écriture
+tm-write-speed-97125f = Vitesse d’écriture
+tm-end-name-51d17c = Terminer { $arg0 } ?
+tm-force-kill-name-c04bb5 = Forcer l’arrêt de { $arg0 } ?
+tm-stop-unit-5021f0 = Arrêter { $arg0 } ?
+tm-unit-9d85ea = { $arg0 } { $arg1 } ?
+tm-sends-sigterm-to-name-pid-pid-the-process-may-refuse-ab1a78 = Envoie SIGTERM à { $arg0 } (PID { $arg1 }). Le processus peut refuser. Sinon, son travail non enregistré sera perdu.
+tm-sends-sigkill-to-name-pid-pid-the-process-cannot-ref-7f892b = Envoie SIGKILL à { $arg0 } (PID { $arg1 }). Le processus ne peut ni refuser ni enregistrer son travail.
+tm-start-unit-this-may-also-start-services-it-depends-o-197cb3 = Démarrer { $arg0 } ? Ses services dépendants peuvent aussi démarrer.
+tm-restart-unit-connections-and-work-using-this-service-670cf0 = Redémarrer { $arg0 } ? Les connexions et le travail utilisant ce service peuvent être interrompus.
+tm-stop-unit-services-that-depend-on-it-may-also-stop-6f8f3c = Arrêter { $arg0 } ? Les services qui en dépendent peuvent aussi s’arrêter.
+tm-no-matches-for-query-5c7251 = Aucun résultat pour « { $arg0 } »
+tm-collecting-noun-7a992d = Collecte : { $arg0 }…
+tm-no-noun-were-found-e843e5 = Aucun élément trouvé : { $arg0 }.
+tm-couldn-t-refresh-noun-28fbf9 = Impossible d’actualiser : { $arg0 }.
+tm-couldn-t-refresh-noun-last-read-age-ago-008ef8 = Impossible d’actualiser { $arg0 } ; dernier relevé il y a { $arg1 }.
+tm-couldn-t-read-noun-cause-e0c657 = Impossible de lire { $arg0 }{ $arg1 }
+tm-name-utilization-unavailable-no-data-db0c69 = Utilisation de { $arg0 } indisponible ; aucune donnée
+tm-usage-bb7a58 = Utilisation : { $arg0 }
+tm-chart-summary = { $seconds ->
+        [one] Utilisation de { $name } sur la dernière seconde : { $percent } % actuellement
+       *[other] Utilisation de { $name } sur les { $seconds } dernières secondes : { $percent } % actuellement
+    }
+tm-group-process-count = { $arg2 ->
+        [one] { $arg0 } { $arg1 }, { $arg2 } processus
+       *[other] { $arg0 } { $arg1 }, { $arg2 } processus
+    }
+tm-socket-count = { $count ->
+        [one] { $count } socket
+       *[other] { $count } sockets
+    }
+tm-core-count = { $count ->
+        [one] { $count } cœur
+       *[other] { $count } cœurs
+    }
+tm-logical-count = { $count ->
+        [one] { $count } logique
+       *[other] { $count } logiques
+    }
+tm-no-logs-reason = Aucun journal disponible : { $reason }
+tm-journal-caption = Les { $count } dernières entrées du journal. Les lignes plus anciennes peuvent être tronquées.
+tm-logs-f6134b = Journaux — { $arg0 }
+tm-copy-value-to-clipboard-1c959c = Copier { $arg0 } dans le presse-papiers
+tm-no-logs-available-c9c818 = Aucun journal disponible.
+tm-copy-failed = Impossible de copier dans le presse-papiers. Réessayez.
+tm-disk-summary = { $seconds ->
+        [one] Débit disque sur la dernière seconde ; lecture { $read }, écriture { $write }
+       *[other] Débit disque sur les { $seconds } dernières secondes ; lecture { $read }, écriture { $write }
+    }
+tm-throughput-summary = { $seconds ->
+        [one] Débit de { $name } sur la dernière seconde, actuellement { $rate }
+       *[other] Débit de { $name } sur les { $seconds } dernières secondes, actuellement { $rate }
+    }
+tm-state-sub-state = { $state } ({ $substate })
+tm-byte-count = { $count ->
+        [one] { $count } octet ({ $size })
+       *[other] { $count } octets ({ $size })
+    }
+tm-utilization-reading = { $percent } % d’utilisation
+tm-load-average-1d77f4 = Charge moyenne
+tm-end-force-kill-unavailable-1fc2bf = Fin/arrêt forcé indisponible — { $arg0 }
+tm-logical-logical-833ae7 = { $arg0 } · { $arg1 } · { $arg2 }
+tm-uptime-days = { $days } j { $clock }
+tm-uptime-clock = { $clock }
+tm-of-mhz-c34bb9 = { $arg0 } sur { $arg1 } MHz
+tm-used-unavailable-total-4ca19c = Utilisation inconnue / { $arg0 } au total
+tm-rx-tx-percent-of-reported-mbps-e6bfb9 = RX+TX : { $arg0 } % sur { $arg1 } Mbps annoncés
+tm-rx-tx-exceeds-reported-mbps-percentage-unavailable-d-ace4bc = RX+TX dépasse les { $arg0 } Mbps annoncés ; pourcentage indisponible (duplex non déduit)
+tm-reported-mbps-rx-tx-percentage-unavailable-465ef0 = { $arg0 } Mbps annoncés ; pourcentage RX+TX indisponible
+
+tm-shell-managing-action = Gestion d’un processus ou d’un service

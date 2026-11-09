@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=Task Manager
+Name[fr]=Gestionnaire des tâches
+Name[ar]=مدير المهام
+Comment=Monitor system resources, processes and services
+Comment[fr]=Surveiller les ressources système, les processus et les services
+Comment[ar]=مراقبة موارد النظام والعمليات والخدمات
+Exec=task-manager-app
+Icon=io.github.enzui.TaskManager
+Terminal=false
+StartupNotify=true
+Categories=System;Monitor;
+Keywords=system;monitor;processes;cpu;memory;network;gpu;services;
+StartupWMClass=io.github.enzui.TaskManager
