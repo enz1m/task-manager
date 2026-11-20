@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<component type="desktop-application">
+  <id>io.github.enzui.TaskManager</id>
+  <name>Task Manager</name>
+  <name xml:lang="fr">Gestionnaire des tâches</name>
+  <name xml:lang="ar">مدير المهام</name>
+  <summary>Monitor system resources, processes and services</summary>
+  <summary xml:lang="fr">Surveiller les ressources système, les processus et les services</summary>
+  <summary xml:lang="ar">مراقبة موارد النظام والعمليات والخدمات</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <developer id="io.github.enzui">
+    <name>enzUI contributors</name>
+  </developer>
+  <description>
+    <p>Inspect CPU, memory, and other resource measurements. Inside Flatpak, the process list is limited to the application sandbox and host service management is unavailable.</p>
+  </description>
+  <launchable type="desktop-id">io.github.enzui.TaskManager.desktop</launchable>
+  <provides>
+    <binary>task-manager-app</binary>
+  </provides>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.1" date="2026-11-20">
+      <description>
+        <p>Add Flatpak packaging for enzim Apps.</p>
+      </description>
+    </release>
+    <release version="0.1.0" date="2026-09-27" />
+  </releases>
+  <url type="homepage">https://github.com/enz1m/task-manager</url>
+  <url type="bugtracker">https://github.com/enz1m/task-manager/issues</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/enz1m/task-manager/9dafec352f15e5279841579dbff18d6b06a99854/docs/screenshots/basic-dark.png</image>
+    </screenshot>
+  </screenshots>
+</component>

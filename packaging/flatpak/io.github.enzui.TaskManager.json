@@ -1,0 +1,52 @@
+{
+  "app-id": "io.github.enzui.TaskManager",
+  "branch": "stable",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "26.08",
+  "sdk": "org.freedesktop.Sdk",
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.rust-stable"
+  ],
+  "command": "task-manager-app",
+  "finish-args": [
+    "--socket=wayland",
+    "--device=dri"
+  ],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/rust-stable/bin"
+  },
+  "modules": [
+    {
+      "name": "task-manager",
+      "buildsystem": "simple",
+      "build-commands": [
+        "cargo build --locked --offline --release --jobs \"${FLATPAK_BUILDER_N_JOBS:-2}\" --bin task-manager-app",
+        "install -Dm755 target/release/task-manager-app /app/bin/task-manager-app",
+        "install -Dm644 assets/io.github.enzui.TaskManager.desktop /app/share/applications/io.github.enzui.TaskManager.desktop",
+        "install -Dm644 packaging/flatpak/io.github.enzui.TaskManager.metainfo.xml /app/share/metainfo/io.github.enzui.TaskManager.metainfo.xml",
+        "install -Dm644 assets/io.github.enzui.TaskManager.svg /app/share/icons/hicolor/scalable/apps/io.github.enzui.TaskManager.svg",
+        "install -Dm644 LICENSE /app/share/licenses/io.github.enzui.TaskManager/LICENSE"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/enz1m/task-manager.git",
+          "commit": "@ENZIM_SOURCE_COMMIT@",
+          "disable-submodules": true
+        },
+        {
+          "type": "archive",
+          "url": "https://github.com/enz1m/task-manager/releases/download/v0.1.1/task-manager-cargo-vendor-0.1.1.tar.xz",
+          "sha256": "80ff2bdcdf275cbf8c4e1c01f4d99965bad85f05b8a87635593025ec08fae25b",
+          "strip-components": 1
+        },
+        {
+          "type": "file",
+          "url": "https://raw.githubusercontent.com/enz1m/enzim-winit/40eeb41f8637ef1620afa377ba006874224b6d65/wayland-protocols/xdg-session-management-v1.xml",
+          "sha256": "3674591ca8e68f76297c535e8edd6783d84b59086c38ebe08ff5ff1f2dec5bae",
+          "dest": "vendor/winit-0.30.13/wayland-protocols"
+        }
+      ]
+    }
+  ]
+}
