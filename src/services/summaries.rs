@@ -75,6 +75,7 @@ impl NetworkCollector {
 
 pub(crate) fn memory_summary() -> MemoryReading {
     memory_summary_with(|| fs::read_to_string("/proc/meminfo"))
+        .with_tmpfs(super::memory::tmpfs_allocated())
 }
 
 pub(crate) fn memory_summary_with(read: impl FnOnce() -> std::io::Result<String>) -> MemoryReading {

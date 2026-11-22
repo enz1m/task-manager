@@ -246,3 +246,6 @@ tm-rx-tx-exceeds-reported-mbps-percentage-unavailable-d-ace4bc = يتجاوز RX
 tm-reported-mbps-rx-tx-percentage-unavailable-465ef0 = السرعة المعلنة { $arg0 } Mbps؛ نسبة RX+TX غير متاحة
 
 tm-shell-managing-action = إدارة عملية أو خدمة
+
+tm-tmpfs-ram-backed = /tmp في الذاكرة
+tm-tmpfs-ram-or-swap = { $size } (ذاكرة أو مساحة تبديل)

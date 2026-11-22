@@ -752,3 +752,6 @@ tm-uptime-days = { $days }d { $clock }
 tm-uptime-clock = { $clock }
 
 tm-shell-managing-action = Managing a process or service
+
+tm-tmpfs-ram-backed = RAM-backed /tmp
+tm-tmpfs-ram-or-swap = { $size } (RAM or swap)

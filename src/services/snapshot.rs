@@ -23,6 +23,8 @@ pub(crate) struct ResourceData {
     pub(crate) stat5_value: String,
     pub(crate) stat6_label: String,
     pub(crate) stat6_value: String,
+    pub(crate) stat7_label: String,
+    pub(crate) stat7_value: String,
     pub(crate) selected: bool,
 }
 
@@ -48,7 +50,7 @@ impl ResourceData {
             stat5_value: String::new(),
             stat6_label: String::new(),
             stat6_value: String::new(),
-            selected: false,
+            ..Self::default()
         }
     }
 }

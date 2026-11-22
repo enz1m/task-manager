@@ -54,6 +54,7 @@ impl MemoryUsage {
 pub(crate) struct MemoryReading {
     ram: Option<MemoryUsage>,
     swap: Option<MemoryUsage>,
+    tmpfs_allocated: Option<u64>,
 }
 
 impl MemoryReading {
@@ -64,7 +65,13 @@ impl MemoryReading {
         Self {
             ram: capacity(text, "MemTotal", "MemAvailable").filter(|usage| usage.total_bytes > 0),
             swap: capacity(text, "SwapTotal", "SwapFree"),
+            tmpfs_allocated: None,
         }
+    }
+
+    pub(super) fn with_tmpfs(mut self, allocated: Option<u64>) -> Self {
+        self.tmpfs_allocated = allocated;
+        self
     }
 
     pub(crate) fn ram(self) -> Option<MemoryUsage> {
@@ -134,6 +141,20 @@ impl MemoryReading {
             stat5_value: swap_value(MemoryUsage::available_bytes),
             stat6_label: "Swap Total".to_owned(),
             stat6_value: swap_value(MemoryUsage::total_bytes),
+            stat7_label: self
+                .tmpfs_allocated
+                .map_or_else(String::new, |_| "RAM-backed /tmp".into()),
+            stat7_value: self.tmpfs_allocated.map_or_else(String::new, |bytes| {
+                let size = format_bytes(bytes);
+                if self.swap.is_some_and(|swap| swap.used_bytes == 0) {
+                    size
+                } else {
+                    crate::i18n::message(
+                        "tm-tmpfs-ram-or-swap",
+                        &[("size", crate::i18n::argument(&size))],
+                    )
+                }
+            }),
             ..ResourceData::default()
         }
     }
@@ -167,4 +188,68 @@ pub(super) fn parse_kib(value: &str) -> Option<u64> {
         return None;
     }
     Some(kib)
+}
+
+pub(super) fn tmpfs_allocated() -> Option<u64> {
+    use rustix::fs::{Mode, OFlags, fstatvfs, open};
+    use std::os::fd::AsRawFd;
+
+    let fd = open(
+        "/tmp",
+        OFlags::PATH | OFlags::DIRECTORY | OFlags::NOFOLLOW | OFlags::CLOEXEC,
+        Mode::empty(),
+    )
+    .ok()?;
+    let descriptor =
+        std::fs::read_to_string(format!("/proc/self/fdinfo/{}", fd.as_raw_fd())).ok()?;
+    let mount_id = descriptor
+        .lines()
+        .find_map(|line| line.strip_prefix("mnt_id:"))?
+        .trim()
+        .parse()
+        .ok()?;
+    let mounts = std::fs::read_to_string("/proc/self/mountinfo").ok()?;
+    if !is_tmpfs_root(&mounts, mount_id) {
+        return None;
+    }
+    let size = fstatvfs(&fd).ok()?;
+    // An unbounded tmpfs reports zero capacity.
+    (size.f_blocks > 0).then_some(())?;
+    (size.f_blocks.checked_sub(size.f_bfree)?).checked_mul(size.f_frsize)
+}
+
+fn is_tmpfs_root(mounts: &str, id: u64) -> bool {
+    mounts.lines().any(|line| {
+        let Some((mount, filesystem)) = line.split_once(" - ") else {
+            return false;
+        };
+        let mut fields = mount.split_ascii_whitespace();
+        fields.next().and_then(|value| value.parse::<u64>().ok()) == Some(id)
+            && fields.nth(2) == Some("/")
+            && fields.next() == Some("/tmp")
+            && filesystem.split_ascii_whitespace().next() == Some("tmpfs")
+    })
+}
+
+#[cfg(test)]
+mod tmpfs_tests {
+    use super::*;
+
+    #[test]
+    fn only_the_active_dedicated_tmpfs_is_reported() {
+        let mounts = "10 1 0:20 / /tmp rw - tmpfs tmpfs rw
+11 1 8:1 / /tmp rw - ext4 /dev/sda1 rw
+12 1 0:21 /scratch /tmp rw - tmpfs tmpfs rw
+13 1 0:22 / / rw - tmpfs tmpfs rw\n";
+        assert!(is_tmpfs_root(mounts, 10));
+        for id in [11, 12, 13, 14] {
+            assert!(!is_tmpfs_root(mounts, id));
+        }
+        let reading = MemoryReading::default();
+        assert!(reading.resource().stat7_label.is_empty());
+        assert_eq!(
+            reading.with_tmpfs(Some(0)).resource().stat7_label,
+            "RAM-backed /tmp"
+        );
+    }
 }

@@ -272,3 +272,6 @@ tm-rx-tx-exceeds-reported-mbps-percentage-unavailable-d-ace4bc = RX+TX dépasse 
 tm-reported-mbps-rx-tx-percentage-unavailable-465ef0 = { $arg0 } Mbps annoncés ; pourcentage RX+TX indisponible
 
 tm-shell-managing-action = Gestion d’un processus ou d’un service
+
+tm-tmpfs-ram-backed = /tmp en mémoire
+tm-tmpfs-ram-or-swap = { $size } (RAM ou échange)

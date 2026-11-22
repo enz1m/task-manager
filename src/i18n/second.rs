@@ -127,6 +127,7 @@ pub(super) const LABELS: &[(&str, &str)] = &[
     ),
     ("Swap", "tm-swap-6ec282"),
     ("Swap Free", "tm-swap-free-dcf9e2"),
+    ("RAM-backed /tmp", "tm-tmpfs-ram-backed"),
     ("Swap Total", "tm-swap-total-ee6887"),
     ("Swap Used", "tm-swap-used-c50c8b"),
     ("Swap free", "tm-swap-free-3b8c65"),

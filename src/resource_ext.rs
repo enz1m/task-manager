@@ -33,6 +33,7 @@ impl ResourceView for ResourceData {
             (&self.stat4_label, &self.stat4_value),
             (&self.stat5_label, &self.stat5_value),
             (&self.stat6_label, &self.stat6_value),
+            (&self.stat7_label, &self.stat7_value),
         ];
         pairs
             .into_iter()
