@@ -270,15 +270,15 @@ pub(crate) fn core_grid<'a>(
     width: f32,
     accent: Color,
     palette: &enzui_theme::Palette,
-    typo: &enzui_theme::TypographyScale,
     sp: &enzui_theme::SpacingScale,
 ) -> Element<'a, Message> {
     let cores = &model.snapshot().cpu_breakdown.cores;
     let columns = crate::layout::core_columns(width);
+    let animated = model.animate_samples();
 
     let cells: Vec<Element<'a, Message>> = cores
         .iter()
-        .map(|core| core_cell(&core.label, core.percent, accent, palette, typo))
+        .map(|core| core_cell(&core.label, core.percent, accent, palette, animated))
         .collect();
     let grid: Element<'a, Message> = enz_grid(columns, cells).gap(6.0).stretch_cells(true).into();
 
@@ -297,13 +297,14 @@ fn core_cell<'a>(
     percent: Option<i32>,
     accent: Color,
     palette: &enzui_theme::Palette,
-    _typo: &enzui_theme::TypographyScale,
+    animated: bool,
 ) -> Element<'a, Message> {
     let sampled: enzui_widgets::Sampled<f32> =
         percent.map(|p| p.clamp(0, 100) as f32 / 100.0).into();
     let mut bar_tokens = ProgressBarTokens::from_palette(palette);
     bar_tokens.track = palette.surface_selected;
     let bar = enz_progress_bar_sampled(sampled)
+        .animated(animated)
         .fill_color(accent)
         .bar_height(6.0)
         .bar_radius(3.0)

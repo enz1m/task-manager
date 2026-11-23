@@ -18,10 +18,14 @@ use crate::resource_ext::ResourceView;
 use crate::services::ResourceData;
 
 pub(crate) fn view<'a>(model: &Model, theme: &EnzTheme) -> Element<'a, Message> {
-    let palette = &theme.palette;
     let sp = &theme.spacing;
-    let typo = &theme.typography;
-    let chart_theme = crate::theme::instant_sample_theme(theme);
+    let style = TileStyle {
+        palette: theme.palette.clone(),
+        typography: theme.typography,
+        spacing: *sp,
+        chart_theme: crate::theme::instant_sample_theme(theme),
+        animated: model.animate_samples(),
+    };
 
     let mut resource_rows = column![].spacing(sp.space3);
     for res in model.sidebar_resources() {
@@ -62,10 +66,7 @@ pub(crate) fn view<'a>(model: &Model, theme: &EnzTheme) -> Element<'a, Message> 
             } else {
                 Some(res.percent)
             },
-            palette,
-            typo,
-            sp,
-            &chart_theme,
+            &style,
         ));
     }
 
@@ -90,19 +91,12 @@ fn resource_tile<'a>(
     res: &ResourceData,
     history: &[crate::services::GraphPointData],
     measured_percent: Option<i32>,
-    palette: &enzui_theme::Palette,
-    typo: &enzui_theme::TypographyScale,
-    sp: &enzui_theme::SpacingScale,
-    chart_theme: &iced::Theme,
+    style: &TileStyle,
 ) -> Element<'a, Message> {
     let resource = res.clone();
     let history = history.to_vec();
-    let style = TileStyle {
-        palette: palette.clone(),
-        typography: *typo,
-        spacing: *sp,
-        chart_theme: chart_theme.clone(),
-    };
+    let sp = style.spacing;
+    let style = style.clone();
     let content = responsive(move |size| {
         resource_tile_content(&resource, &history, measured_percent, &style, size.width)
     })
@@ -130,11 +124,13 @@ fn resource_tile<'a>(
         .into()
 }
 
+#[derive(Clone)]
 struct TileStyle {
     palette: enzui_theme::Palette,
     typography: enzui_theme::TypographyScale,
     spacing: enzui_theme::SpacingScale,
     chart_theme: iced::Theme,
+    animated: bool,
 }
 
 fn resource_tile_content<'a>(
@@ -190,7 +186,7 @@ fn resource_tile_content<'a>(
     .spacing(enzui_theme::SpaceToken::Xxs.resolve(sp))
     .width(Length::Fill);
 
-    let meter = meter_bar(percent, accent, palette);
+    let meter = meter_bar(percent, accent, palette, style.animated);
 
     let text_half: Element<'a, Message> = column![label_stack, meter].spacing(sp.space3).into();
 
@@ -255,10 +251,12 @@ fn meter_bar<'a>(
     fraction: Option<f32>,
     accent: Color,
     palette: &enzui_theme::Palette,
+    animated: bool,
 ) -> Element<'a, Message> {
     let mut tokens = ProgressBarTokens::from_palette(palette);
     tokens.track = palette.surface_selected;
     enz_progress_bar_sampled(fraction.into())
+        .animated(animated)
         .fill_color(accent)
         .bar_height(4.0)
         .bar_radius(2.0)

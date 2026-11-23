@@ -226,34 +226,21 @@ impl App {
             Message::WindowResized(size) => {
                 self.model.resize(size);
             }
-            Message::WindowVisibilityChanged(visible) => {
-                if self.model.window_visible != visible {
-                    self.invalidate_collections();
+            Message::WindowFocusChanged(focused) => {
+                self.model.window_focused = focused;
+                if focused {
+                    return self.set_window_visible(true);
                 }
-                self.model.window_visible = visible;
-                if visible {
-                    self.request_collection(collection::SourceKind::Cadence);
-                    return self.prepare_device_facts_if_visible();
-                }
-            }
-            Message::CheckWindowMinimized => {
                 // An unfocused window may still be visible beside another window.
                 return iced::window::latest().then(|window| match window {
                     Some(id) => iced::window::is_minimized(id).map(Message::WindowMinimized),
                     None => Task::none(),
                 });
             }
-            Message::WindowMinimized(Some(minimized)) => {
-                if self.model.window_visible == minimized {
-                    self.invalidate_collections();
-                }
-                self.model.window_visible = !minimized;
-                if !minimized {
-                    self.request_collection(collection::SourceKind::Cadence);
-                    return self.prepare_device_facts_if_visible();
-                }
+            Message::WindowMinimized(Some(minimized)) if !self.model.window_focused => {
+                return self.set_window_visible(!minimized);
             }
-            Message::WindowMinimized(None) => {}
+            Message::WindowMinimized(_) => {}
             Message::Sidebar(state) => self.nav = state,
 
             Message::OpenContextMenu(target, at) => {
@@ -401,8 +388,7 @@ impl App {
                     });
                 }
                 if command == enzui_widgets::title_bar_gesture::WindowCommand::Minimize {
-                    self.invalidate_collections();
-                    self.model.window_visible = false;
+                    let _ = self.set_window_visible(false);
                 }
                 return iced::window::latest().then(move |maybe_id| match maybe_id {
                     Some(id) => command.into_task(id),

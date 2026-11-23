@@ -132,7 +132,9 @@ fn navigation_and_minimize_cancel_without_publishing_late_data() {
     frames(&mut app);
     let token = seen.recv_timeout(WAIT).unwrap();
     let _ = app.reduce(Message::SelectPage(Page::Services));
-    let _ = app.reduce(Message::WindowVisibilityChanged(false));
+    let _ = app.reduce(Message::Window(
+        enzui_widgets::title_bar_gesture::WindowCommand::Minimize,
+    ));
     assert!(token.is_terminal());
     let _ = app.reduce(Message::CollectionWake);
     assert_eq!(app.model.collections.as_ref().unwrap().live(), 1);
@@ -143,8 +145,44 @@ fn navigation_and_minimize_cancel_without_publishing_late_data() {
     });
     assert!(app.model.snapshot().processes.is_empty());
     assert_eq!(count.load(Ordering::SeqCst), 1);
-    let _ = app.reduce(Message::WindowVisibilityChanged(true));
+    let _ = app.reduce(Message::WindowFocusChanged(true));
     drive(&mut app, |app| {
         app.model.collection_health.phase(SourceKind::Services) == Phase::Empty
     });
+}
+
+#[test]
+fn unfocused_performance_keeps_sampling_and_resumes_motion_on_focus() {
+    let mut app = app_with(|scope, generation, _| {
+        let mut sample = captured(scope, generation);
+        sample.snapshot.cpu_breakdown.measurement = services::CpuUsage::from_samples(
+            &services::CpuTimes::default(),
+            &services::CpuTimes {
+                user: generation,
+                idle: 100 - generation,
+                ..Default::default()
+            },
+        );
+        Ok(sample)
+    });
+    app.model.select_page(Page::Performance);
+    frames(&mut app);
+    let _ = app.reduce(Message::WindowFocusChanged(true));
+    assert!(app.model.animate_samples());
+    drive(&mut app, |app| {
+        app.model.collections.as_ref().unwrap().is_idle()
+    });
+    let previous = app.model.active_history().last().unwrap().clone();
+
+    let _ = app.reduce(Message::WindowFocusChanged(false));
+    assert!(!app.model.animate_samples());
+    let _ = app.reduce(Message::CollectionTick);
+    drive(&mut app, |app| {
+        app.model.active_history().last().unwrap().at > previous.at
+    });
+    assert!(app.model.active_history().last().unwrap().user > previous.user);
+
+    let _ = app.reduce(Message::WindowFocusChanged(true));
+    let _ = app.reduce(Message::WindowMinimized(Some(true)));
+    assert!(app.model.animate_samples());
 }

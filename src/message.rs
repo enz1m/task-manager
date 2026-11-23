@@ -44,8 +44,7 @@ pub(crate) enum Message {
     /// Sets the absolute vertical scrollbar offset in pixels.
     TableScrolled(f32),
     WindowResized(Size),
-    WindowVisibilityChanged(bool),
-    CheckWindowMinimized,
+    WindowFocusChanged(bool),
     WindowMinimized(Option<bool>),
     Sidebar(enzui_widgets::nav_split::NavSplitState),
 
@@ -127,8 +126,7 @@ impl enzui_core::crash_report::MessageKind for Message {
             Self::TableWheelScrolled(..) => "TableWheelScrolled",
             Self::TableScrolled(..) => "TableScrolled",
             Self::WindowResized(..) => "WindowResized",
-            Self::WindowVisibilityChanged(..) => "WindowVisibilityChanged",
-            Self::CheckWindowMinimized => "CheckWindowMinimized",
+            Self::WindowFocusChanged(..) => "WindowFocusChanged",
             Self::WindowMinimized(..) => "WindowMinimized",
             Self::Sidebar(..) => "Sidebar",
             Self::OpenContextMenu(..) => "OpenContextMenu",

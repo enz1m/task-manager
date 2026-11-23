@@ -79,6 +79,7 @@ impl Model {
             logs_request: None,
             window: Size::new(1400.0, 900.0),
             window_visible: true,
+            window_focused: false,
             menu: enzui_widgets::context_menu_host::ContextMenu::new(),
             pending_action: None,
             actions: crate::actions::Actions::default(),

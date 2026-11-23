@@ -48,6 +48,7 @@ pub(crate) struct Model {
     pub(crate) window: Size,
     /// Enables collection requests and cadence wakes while the window is available.
     pub(crate) window_visible: bool,
+    pub(crate) window_focused: bool,
     pub(crate) menu:
         enzui_widgets::context_menu_host::ContextMenu<MenuTarget, crate::message::Message>,
     pub(crate) pending_action: Option<PendingAction>,
@@ -74,6 +75,12 @@ pub(crate) struct Model {
     pub(crate) disk_history: Vec<GraphPointData>,
     pub(crate) network_history: HashMap<String, Vec<GraphPointData>>,
     pub(crate) gpu_history: Vec<GraphPointData>,
+}
+
+impl Model {
+    pub(crate) fn animate_samples(&self) -> bool {
+        self.window_visible && self.window_focused
+    }
 }
 
 impl Default for Model {

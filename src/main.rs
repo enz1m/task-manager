@@ -197,9 +197,11 @@ fn classify_event(event: &iced::Event, status: iced::event::Status) -> Option<Me
             Some(Message::WindowResized(*size))
         }
         iced::Event::Window(iced::window::Event::Focused) => {
-            Some(Message::WindowVisibilityChanged(true))
+            Some(Message::WindowFocusChanged(true))
         }
-        iced::Event::Window(iced::window::Event::Unfocused) => Some(Message::CheckWindowMinimized),
+        iced::Event::Window(iced::window::Event::Unfocused) => {
+            Some(Message::WindowFocusChanged(false))
+        }
         // F1 is navigation rather than a command binding, so it stays out of
         // the `keybindings` table and opens Help from anywhere.
         iced::Event::Keyboard(iced::keyboard::Event::KeyPressed {

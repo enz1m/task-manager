@@ -3,6 +3,18 @@
 use super::*;
 
 impl App {
+    pub(crate) fn set_window_visible(&mut self, visible: bool) -> Task<Message> {
+        if self.model.window_visible != visible {
+            self.invalidate_collections();
+            self.model.window_visible = visible;
+        }
+        if visible {
+            self.request_collection(collection::SourceKind::Cadence);
+            return self.prepare_device_facts_if_visible();
+        }
+        Task::none()
+    }
+
     pub(crate) fn request_collection(&mut self, kind: collection::SourceKind) {
         self.request_collection_with(kind, false);
     }

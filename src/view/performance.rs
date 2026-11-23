@@ -106,7 +106,7 @@ pub(crate) fn view<'a>(model: &Model, theme: &EnzTheme, width: f32) -> Element<'
     if res.id == "cpu" {
         let cores = &model.snapshot().cpu_breakdown.cores;
         if !cores.is_empty() {
-            body = body.push(core_grid(model, width, accent, palette, typo, sp));
+            body = body.push(core_grid(model, width, accent, palette, sp));
         }
     }
 
@@ -125,7 +125,7 @@ pub(crate) fn resource_chart<'a>(
 ) -> Element<'a, Message> {
     let res = model.active_resource();
     let history = model.active_history();
-    let live = model.window_visible;
+    let live = model.animate_samples();
     let chart_content = if res.id == "disk" {
         charts::live_disk_history_chart(history, chart_height, theme, model.epoch, live)
     } else if res.id.starts_with("network") {
