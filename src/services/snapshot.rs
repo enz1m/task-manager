@@ -108,7 +108,7 @@ impl ActionRefusal {
 }
 
 /// A process row identity captured when an interaction is created.
-#[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub(crate) struct ProcessTarget {
     pub(crate) pid: String,
     pub(crate) start_time_ticks: u64,
@@ -117,7 +117,7 @@ pub(crate) struct ProcessTarget {
 
 impl ProcessTarget {}
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub(crate) struct ProcessData {
     pub(crate) parent_pid: u32,
     /// Nearest same-owner desktop application in the sampled parent chain.
@@ -178,7 +178,7 @@ impl ProcessData {
             return None;
         }
         let pid = self.pid.trim().parse::<u32>().unwrap_or(0);
-        if pid <= 1 || pid == std::process::id() {
+        if pid <= 1 || crate::host_processes::is_direct_pid(pid) {
             return Some(ActionRefusal::SelfOrInit);
         }
         if self.user == "root" || self.user == "systemd-resolve" {

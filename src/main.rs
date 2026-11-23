@@ -12,6 +12,7 @@ mod collection;
 mod collection_tests;
 mod device_facts;
 mod filter_menus;
+mod host_processes;
 mod i18n;
 mod keybindings;
 mod layout;
@@ -95,6 +96,16 @@ fn test_theme_integration(theme: EnzTheme) -> ThemeIntegration {
 }
 
 fn main() -> iced::Result {
+    if std::env::args_os()
+        .nth(1)
+        .is_some_and(|arg| arg == host_processes::HELPER_ARGUMENT)
+    {
+        if let Err(error) = host_processes::serve() {
+            eprintln!("Task Manager host process collector: {error}");
+            std::process::exit(1);
+        }
+        return Ok(());
+    }
     enzui_core::crash_report::CrashReporter::for_app("task-manager-app", env!("CARGO_PKG_VERSION"));
     let _ = enzui_widgets::monospace_fallback::install_monospace_fallback();
 

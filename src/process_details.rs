@@ -13,11 +13,23 @@ mod procfs;
 #[cfg(test)]
 mod tests;
 
+pub(crate) fn collect_local(target: &ProcessTarget, token: &CancelToken) -> Reading {
+    procfs::collect(target, token)
+}
+
+fn collect(target: &ProcessTarget, token: &CancelToken) -> Reading {
+    if crate::host_processes::in_flatpak() {
+        crate::host_processes::details(target, token)
+    } else {
+        collect_local(target, token)
+    }
+}
+
 const FLIGHT_BUDGET: Duration = Duration::from_secs(2);
 const BUSY_BACKOFF: Duration = Duration::from_millis(250);
 const MAX_BUSY_RETRIES: u8 = 1;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(crate) enum Limit {
     Entries,
     Name,
@@ -26,7 +38,7 @@ pub(crate) enum Limit {
     Aggregate,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(crate) enum Failure {
     PermissionDenied,
     Refused,
@@ -69,13 +81,13 @@ impl Failure {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(crate) struct Entry {
     id: u32,
     value: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(crate) struct Reading {
     threads: Result<Vec<Entry>, Failure>,
     files: Result<Vec<Entry>, Failure>,
@@ -83,7 +95,7 @@ pub(crate) struct Reading {
 }
 
 impl Reading {
-    fn failed(failure: Failure) -> Self {
+    pub(crate) fn failed(failure: Failure) -> Self {
         Self {
             threads: Err(failure),
             files: Err(failure),
@@ -167,7 +179,7 @@ impl Default for Details {
             pending: None,
             retry_at: None,
             busy_retries: 0,
-            collect: Arc::new(procfs::collect),
+            collect: Arc::new(collect),
             flight_wakes: Vec::new(),
         }
     }

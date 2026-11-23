@@ -1,7 +1,7 @@
 //! Process actions and their signal mappings.
 
 /// The signals supported by owned process actions.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(crate) enum Signal {
     /// SIGTERM (15): a polite request to terminate; the process may refuse.
     Term,

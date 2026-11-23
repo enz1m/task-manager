@@ -60,7 +60,11 @@ impl std::fmt::Debug for Actions {
 }
 impl Default for Actions {
     fn default() -> Self {
-        Self::with_backend(Arc::new(crate::services::LinuxProcessSignalBackend))
+        if crate::host_processes::in_flatpak() {
+            Self::with_backend(Arc::new(crate::host_processes::HostSignalBackend))
+        } else {
+            Self::with_backend(Arc::new(crate::services::LinuxProcessSignalBackend))
+        }
     }
 }
 impl Actions {

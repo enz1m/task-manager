@@ -62,7 +62,9 @@ pub(crate) use desktop_names::{
 mod summaries;
 #[cfg(test)]
 pub(crate) use collection::collect_processes_in;
-pub(crate) use collection::{collect_processes_with, collect_services_with};
+pub(crate) use collection::{
+    collect_processes_local, collect_processes_with, collect_services_with, local_signal_target,
+};
 #[cfg(test)]
 pub(crate) use summaries::disk_summary_with;
 pub(crate) use summaries::{

@@ -16,7 +16,7 @@ resolver = "3"
 [features]
 x11 = ["iced/x11", "enzui-widgets/x11"]
 # Center requires an enrolled app credential.
-center = ["dep:enzui-agent", "dep:serde", "dep:serde_json"]
+center = ["dep:enzui-agent"]
 
 
 [dependencies]
@@ -29,13 +29,13 @@ enzui-theme = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb19517
 enzui-widgets = { features = ["application-dbus"], git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
 enzui-icons = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
 enzui-agent = { features = ["iced-consumer"], optional = true, git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
-serde = { version = "1", features = ["derive"], optional = true }
-serde_json = { version = "1", optional = true }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 tokio = { version = "1", features = ["time", "rt"] }
 libc = "0.2"
 log = "0.4"
 # Use pidfds to keep PID reuse from redirecting signal delivery.
-rustix = { version = "1.1", features = ["process"] }
+rustix = { version = "1.1", features = ["process", "event"] }
 
 [dev-dependencies]
 enzui-test-support = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }

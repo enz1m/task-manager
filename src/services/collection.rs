@@ -3,6 +3,23 @@
 use super::*;
 
 pub(crate) fn collect_processes_with(cancellation: &CancelToken) -> (Vec<ProcessData>, bool) {
+    if crate::host_processes::in_flatpak() {
+        match crate::host_processes::sample(cancellation) {
+            Some(sample) => {
+                PROCESS_THREAD_TOTAL.store(sample.threads, std::sync::atomic::Ordering::Relaxed);
+                let empty = sample.rows.is_empty();
+                return (sample.rows, empty);
+            }
+            None => {
+                PROCESS_THREAD_TOTAL.store(0, std::sync::atomic::Ordering::Relaxed);
+                return (Vec::new(), true);
+            }
+        }
+    }
+    collect_processes_local(cancellation)
+}
+
+pub(crate) fn collect_processes_local(cancellation: &CancelToken) -> (Vec<ProcessData>, bool) {
     collect_processes_in(std::path::Path::new("/proc"), cancellation)
 }
 
@@ -116,7 +133,8 @@ pub(crate) fn collect_processes_in(
         seen_identities.insert(identity_key);
         let display_name = identity.display_name.clone();
         let kind = identity.kind.clone();
-        let action_allowed = row_action_allowed(&identity, &pid, &user, &caller);
+        let action_allowed =
+            row_action_allowed(&identity, &pid, &user, &caller) && !is_task_manager(&command);
         rows.push(ProcessData {
             parent_pid: stat_line.stat.parent_pid,
             application_name: None,
@@ -149,6 +167,22 @@ pub(crate) fn collect_processes_in(
 
     let fabricated = rows.is_empty();
     (rows, fabricated)
+}
+
+pub(crate) fn local_signal_target(pid: u32) -> bool {
+    let directory = Path::new("/proc").join(pid.to_string());
+    scan_process(&directory, pid.to_string()).is_some_and(|row| {
+        !is_task_manager(&row.command)
+            && !super::process_stat::is_protected_process(&row.stat_line.comm, &row.command)
+    })
+}
+
+fn is_task_manager(command: &str) -> bool {
+    command.split_whitespace().any(|arg| {
+        Path::new(arg)
+            .file_name()
+            .is_some_and(|name| name == "task-manager-app")
+    })
 }
 
 fn scan_process(directory: &std::path::Path, pid: String) -> Option<ScannedProcess> {

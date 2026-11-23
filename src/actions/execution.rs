@@ -32,7 +32,7 @@ pub(super) fn execute_process(
         .lock()
         .unwrap_or_else(std::sync::PoisonError::into_inner);
     if !work.wired() && !reconciliation_only {
-        if *pid <= 1 || *pid == std::process::id() {
+        if *pid <= 1 || crate::host_processes::is_direct_pid(*pid) {
             return State::Failed(SignalFailure::NotPermitted);
         }
         if cancellation.is_terminal() {

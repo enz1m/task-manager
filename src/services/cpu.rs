@@ -151,7 +151,7 @@ where
 pub(crate) fn collect_thread_total() -> u64 {
     use std::sync::atomic::Ordering;
     let cached = PROCESS_THREAD_TOTAL.load(Ordering::Relaxed);
-    if cached > 0 {
+    if cached > 0 || crate::host_processes::in_flatpak() {
         return cached;
     }
     // Zero is also the uninitialized cache value, so it triggers a direct thread census.

@@ -18,7 +18,7 @@ pub(crate) trait ProcessSignalBackend: Send + Sync {
     fn pin(&self, pid: u32) -> Result<Box<dyn PinnedProcess>, SignalFailure>;
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(crate) enum SignalFailure {
     NotPermitted,
     Gone,
@@ -210,7 +210,7 @@ pub(crate) fn current_user() -> String {
 
 pub(crate) fn caller_may_act(pid: &str, user: &str, caller: &str) -> bool {
     let pid = pid.trim().parse::<u32>().unwrap_or(0);
-    if pid <= 1 || pid == std::process::id() {
+    if pid <= 1 || crate::host_processes::is_direct_pid(pid) {
         return false;
     }
     if user == "root" || user == "systemd-resolve" {

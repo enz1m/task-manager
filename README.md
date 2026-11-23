@@ -50,6 +50,11 @@ Task Manager does not register document formats. It reads Linux process and syst
 
 Sensor and GPU information depends on kernel/driver support and permissions. System services need systemd. Elevated actions follow the host authorization policy; unavailable values are shown rather than invented.
 
+The Flatpak uses `org.freedesktop.Flatpak` to run its bundled process collector
+as the logged-in user. The collector reads host process lists and details, sends
+signals through pidfds, and exits when Task Manager closes. This permission
+allows the app to launch commands on the host. Native builds read procfs directly.
+
 Shared enzUI theme settings apply live. Translations are under `assets/locales`;
 locale coverage varies.
 
