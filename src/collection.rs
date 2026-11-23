@@ -414,22 +414,16 @@ impl Collections {
             drain.phase = ClosePhase::Vetoed;
         }
         self.closing = Some(drain);
+        if drain.phase != ClosePhase::Vetoed {
+            return (None, None);
+        }
         let notice = if matches!(self.worker_join, WorkerJoin::Failed) {
             "Close vetoed: collection worker join failed; clean shutdown is unverified".to_owned()
         } else {
             crate::i18n::message(
                 "tm-retaining-first-window-until-live-owned-i-o-jobs-and-2bb9e0",
                 &[
-                    (
-                        "arg0",
-                        crate::i18n::argument(
-                            &(if drain.phase == ClosePhase::Vetoed {
-                                "Close vetoed"
-                            } else {
-                                "Closing"
-                            }),
-                        ),
-                    ),
+                    ("arg0", crate::i18n::argument(&"Close vetoed")),
                     ("arg1", crate::i18n::argument(&(live))),
                 ],
             )

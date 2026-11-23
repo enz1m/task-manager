@@ -7,6 +7,7 @@ impl App {
         if !self.session.start_close(id) {
             return Task::none();
         }
+        self.model.collection_health.paused_at = Some(std::time::Instant::now());
         self.shutdown_logs();
         self.model.pending_action = None;
         self.model.menu.close();
@@ -16,7 +17,6 @@ impl App {
     }
 
     pub(crate) fn begin_collection_close(&mut self, id: iced::window::Id) {
-        self.invalidate_collections();
         let owner = self
             .model
             .collections

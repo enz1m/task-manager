@@ -8,13 +8,6 @@ use iced::{Element, Length};
 
 /// Replace unavailable content, preserving the loaded page during pending navigation.
 pub(crate) fn blocking_page<'a>(model: &Model) -> Option<Element<'a, Message>> {
-    if let Some(notice) = &model.collection_health.close_notice {
-        return Some(
-            enz_status_page(crate::i18n::display("Collection stopped"))
-                .description(crate::i18n::display(notice.clone()))
-                .into(),
-        );
-    }
     if !model.collection_health.managed || model.pending_page.is_some() {
         return None;
     }

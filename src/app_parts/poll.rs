@@ -30,6 +30,7 @@ impl App {
         {
             return;
         }
+        self.model.collection_health.paused_at = None;
         let scope = if kind == collection::SourceKind::Refresh {
             services::SampleScope::ALL
         } else {
@@ -99,12 +100,14 @@ impl App {
         if let Some(owner) = self.model.collections.as_mut() {
             owner.invalidate();
         }
-        for source in [
-            collection::SourceKind::Processes,
-            collection::SourceKind::Services,
-            collection::SourceKind::Telemetry,
-        ] {
-            self.model.collection_health.begin(source, keep_current);
+        if self.model.collection_health.paused_at.is_none() {
+            for source in [
+                collection::SourceKind::Processes,
+                collection::SourceKind::Services,
+                collection::SourceKind::Telemetry,
+            ] {
+                self.model.collection_health.begin(source, keep_current);
+            }
         }
         self.model.abandon_device_facts_load();
     }

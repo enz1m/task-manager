@@ -112,11 +112,18 @@ impl App {
 
     /// The bottom-right stack: app-owned status notices above the transient toasts.
     fn notification_stack(&self, with_toasts: bool) -> Option<Element<'_, Message>> {
-        let notices: Vec<_> = self
+        let mut notices: Vec<_> = self
             .status_notices()
             .into_iter()
             .map(|(key, notice)| notice.on_dismiss(Message::DismissNotice(key)))
             .collect();
+        if let Some(notice) = &self.model.collection_health.close_notice {
+            notices.push(enzui_widgets::notice_stack::EnzNotice::new(
+                "tm-collection-close",
+                crate::i18n::display(notice.clone()),
+                enzui_widgets::toast::ToastTone::Warning,
+            ));
+        }
         let toasts = (with_toasts && !self.model.toasts.is_empty())
             .then(|| self.model.toasts.view().map(Message::Toast));
         if notices.is_empty() {

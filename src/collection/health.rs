@@ -58,9 +58,16 @@ impl Default for Status {
 pub(crate) struct Health {
     pub(crate) managed: bool,
     statuses: BTreeMap<SourceKind, Status>,
+    pub(crate) paused_at: Option<Instant>,
     pub(crate) close_notice: Option<String>,
 }
 impl Health {
+    fn age(&self, captured: Instant) -> std::time::Duration {
+        self.paused_at
+            .unwrap_or_else(Instant::now)
+            .saturating_duration_since(captured)
+    }
+
     pub(crate) fn pending() -> Self {
         Self {
             managed: true,
@@ -75,7 +82,7 @@ impl Health {
             && matches!(status.phase, Phase::Current | Phase::Empty)
             && status
                 .last_good
-                .is_some_and(|captured| captured.elapsed() > LIVE_CAPTURE_MAX_AGE)
+                .is_some_and(|captured| self.age(captured) > LIVE_CAPTURE_MAX_AGE)
         {
             Phase::Stale
         } else {
@@ -143,7 +150,7 @@ impl Health {
                     .statuses
                     .get(&source)
                     .and_then(|status| status.last_good)
-                    .map(|at| ago(at.elapsed()))
+                    .map(|at| ago(self.age(at)))
                     .unwrap_or_default();
                 Some(if age.is_empty() {
                     crate::i18n::message(

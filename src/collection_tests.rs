@@ -83,6 +83,26 @@ fn drive(app: &mut App, done: impl Fn(&App) -> bool) {
         std::thread::sleep(Duration::from_millis(2));
     }
 }
+
+#[test]
+fn closing_retains_the_loaded_page_with_a_worker_veto() {
+    let mut app = app_with(|scope, generation, _| Ok(captured(scope, generation)));
+    app.model.select_page(Page::Performance);
+    app.request_collection(SourceKind::Boot);
+    frames(&mut app);
+    drive(&mut app, |app| {
+        app.model.collection_health.phase(SourceKind::Telemetry) == Phase::Current
+    });
+
+    let _ = app.request_close(iced::window::Id::unique());
+    assert_eq!(
+        app.model.collection_health.phase(SourceKind::Telemetry),
+        Phase::Current
+    );
+    app.model.collection_health.close_notice = Some("Collection worker did not exit".to_owned());
+    assert!(view::collection::blocking_page(&app.model).is_none());
+}
+
 #[test]
 fn refresh_storm_publishes_only_the_latest_requested_generation() {
     let (release, wait) = gate();
