@@ -20,15 +20,15 @@ center = ["dep:enzui-agent", "dep:serde", "dep:serde_json"]
 
 
 [dependencies]
-enzui-activity = { git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
-iced = { default-features = false, features = ["wgpu", "tiny-skia", "crisp", "web-colors", "thread-pool", "linux-theme-detection", "wayland", "wayland-dlopen", "wayland-decorations", "canvas", "svg", "a11y", "tokio"], git = "https://github.com/enz1m/enzim-iced.git", rev = "8cabe557ce42e96b4b3fb245f69488521fe6eacb" }
-iced_renderer = { default-features = false, git = "https://github.com/enz1m/enzim-iced.git", rev = "8cabe557ce42e96b4b3fb245f69488521fe6eacb" }
-enzui-core = { features = ["accesskit", "perf-counter", "activation-native-iced"], git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
-enzui-services = { git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
-enzui-theme = { git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
-enzui-widgets = { features = ["application-dbus"], git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
-enzui-icons = { git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
-enzui-agent = { features = ["iced-consumer"], optional = true, git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
+enzui-activity = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
+iced = { default-features = false, features = ["wgpu", "tiny-skia", "crisp", "web-colors", "thread-pool", "linux-theme-detection", "wayland", "wayland-dlopen", "wayland-decorations", "canvas", "svg", "a11y", "tokio"], git = "https://github.com/enz1m/enzim-iced.git", rev = "22ea94fc775a3de8d1c1a1905b51d09b236e4c3b" }
+iced_renderer = { default-features = false, git = "https://github.com/enz1m/enzim-iced.git", rev = "22ea94fc775a3de8d1c1a1905b51d09b236e4c3b" }
+enzui-core = { features = ["accesskit", "perf-counter", "activation-native-iced"], git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
+enzui-services = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
+enzui-theme = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
+enzui-widgets = { features = ["application-dbus"], git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
+enzui-icons = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
+enzui-agent = { features = ["iced-consumer"], optional = true, git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
 serde = { version = "1", features = ["derive"], optional = true }
 serde_json = { version = "1", optional = true }
 tokio = { version = "1", features = ["time", "rt"] }
@@ -38,9 +38,9 @@ log = "0.4"
 rustix = { version = "1.1", features = ["process"] }
 
 [dev-dependencies]
-enzui-test-support = { git = "https://github.com/enz1m/enzui.git", rev = "ac1a3d759d40c9f9f26f3b80b40e508dea086776" }
+enzui-test-support = { git = "https://github.com/enz1m/enzui.git", rev = "27d8e8bb1951713ff3c45d6b5a7cb4e2e782c610" }
 
-iced_test = { git = "https://github.com/enz1m/enzim-iced.git", rev = "8cabe557ce42e96b4b3fb245f69488521fe6eacb" }
+iced_test = { git = "https://github.com/enz1m/enzim-iced.git", rev = "22ea94fc775a3de8d1c1a1905b51d09b236e4c3b" }
 
 [patch.crates-io]
 zbus_macros = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "e182645b56d15e637bb6c8144f99ebfa7f900716" }

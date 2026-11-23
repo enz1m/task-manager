@@ -37,7 +37,7 @@ cargo build --locked
 cargo run --locked
 ```
 
-Dependencies pin public [enzUI Alpha 0.2](https://github.com/enz1m/enzui/releases/tag/v0.2.0-alpha.1)
+Dependencies pin public [enzUI source](https://github.com/enz1m/enzui)
 and its matching public foundation forks. No sibling framework checkout is needed.
 Wayland is enabled by default; use `--features x11` when X11 support is needed.
 Use `cargo build --release --locked` for an optimized binary.
