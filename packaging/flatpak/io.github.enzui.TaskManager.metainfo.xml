@@ -23,9 +23,8 @@
   <releases>
     <release version="0.1.1" date="2026-11-23">
       <description>
-        <p>Show memory-backed temporary storage and pause performance animations in the background.</p>
-        <p>The Flatpak shows sandbox processes and resource measurements. Host service management is available in the native package.</p>
-        <p>Update enzUI and its paired iced fork for nonblocking Wayland presentation discovery.</p>
+        <p>Task Manager is available on enzim Apps. The Flatpak shows resource measurements and processes inside its sandbox.</p>
+        <p>The storage view identifies temporary storage that uses memory. Performance charts pause their animations in the background.</p>
       </description>
     </release>
     <release version="0.1.0" date="2026-09-27" />
