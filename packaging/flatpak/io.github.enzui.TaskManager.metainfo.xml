@@ -21,9 +21,11 @@
   </provides>
   <content_rating type="oars-1.1" />
   <releases>
-    <release version="0.1.1" date="2026-11-20">
+    <release version="0.1.1" date="2026-11-23">
       <description>
-        <p>Add Flatpak packaging for enzim Apps.</p>
+        <p>Show memory-backed temporary storage and pause performance animations in the background.</p>
+        <p>The Flatpak shows sandbox processes and resource measurements. Host service management is available in the native package.</p>
+        <p>Update enzUI and its paired iced fork for nonblocking Wayland presentation discovery.</p>
       </description>
     </release>
     <release version="0.1.0" date="2026-09-27" />

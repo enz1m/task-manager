@@ -37,7 +37,7 @@
         {
           "type": "archive",
           "url": "https://github.com/enz1m/task-manager/releases/download/v0.1.1/task-manager-cargo-vendor-0.1.1.tar.xz",
-          "sha256": "80ff2bdcdf275cbf8c4e1c01f4d99965bad85f05b8a87635593025ec08fae25b",
+          "sha256": "6de2308985941a4ad4d4550c887ab8c4e0d2cda546d2491c404501a2cad501cf",
           "strip-components": 1
         },
         {
