@@ -34,37 +34,49 @@ pub(crate) fn view<'a>(model: &Model, theme: &EnzTheme) -> Element<'a, Message> 
             &res,
             history,
             if res.id == "cpu" {
-                model
-                    .snapshot()
-                    .cpu_breakdown
-                    .measurement
-                    .map(crate::services::CpuUsage::busy_percent)
+                Meter::Measured(
+                    model
+                        .snapshot()
+                        .cpu_breakdown
+                        .measurement
+                        .map(crate::services::CpuUsage::busy_percent),
+                )
             } else if res.id == "memory" {
-                model
-                    .snapshot()
-                    .memory_reading
-                    .ram()
-                    .map(crate::services::MemoryUsage::used_percent)
+                Meter::Measured(
+                    model
+                        .snapshot()
+                        .memory_reading
+                        .ram()
+                        .map(crate::services::MemoryUsage::used_percent),
+                )
             } else if res.id == "disk" {
-                model
-                    .snapshot()
-                    .disk_reading
-                    .activity()
-                    .map(crate::services::DiskActivity::utilization_percent)
+                Meter::Measured(
+                    model
+                        .snapshot()
+                        .disk_reading
+                        .activity()
+                        .map(crate::services::DiskActivity::utilization_percent),
+                )
             } else if res.id == "gpu" {
-                model
-                    .snapshot()
-                    .gpu_reading
-                    .busy()
-                    .map(crate::services::GpuBusy::percent)
+                Meter::Measured(
+                    model
+                        .snapshot()
+                        .gpu_reading
+                        .busy()
+                        .map(crate::services::GpuBusy::percent),
+                )
             } else if res.id.starts_with("network") {
-                model
-                    .snapshot()
-                    .network_readings
-                    .get(&res.id)
-                    .and_then(crate::services::NetworkReading::capacity_percent)
+                let reading = model.snapshot().network_readings.get(&res.id);
+                // Without a reported link speed, e.g. on Wi-Fi, throughput has no ceiling.
+                if reading.is_some_and(|reading| !reading.has_link_speed()) {
+                    Meter::Hidden
+                } else {
+                    Meter::Measured(
+                        reading.and_then(crate::services::NetworkReading::capacity_percent),
+                    )
+                }
             } else {
-                Some(res.percent)
+                Meter::Measured(Some(res.percent))
             },
             &style,
         ));
@@ -87,10 +99,16 @@ pub(crate) fn view<'a>(model: &Model, theme: &EnzTheme) -> Element<'a, Message> 
     body.into()
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Meter {
+    Measured(Option<i32>),
+    Hidden,
+}
+
 fn resource_tile<'a>(
     res: &ResourceData,
     history: &[crate::services::GraphPointData],
-    measured_percent: Option<i32>,
+    meter: Meter,
     style: &TileStyle,
 ) -> Element<'a, Message> {
     let resource = res.clone();
@@ -98,7 +116,7 @@ fn resource_tile<'a>(
     let sp = style.spacing;
     let style = style.clone();
     let content = responsive(move |size| {
-        resource_tile_content(&resource, &history, measured_percent, &style, size.width)
+        resource_tile_content(&resource, &history, meter, &style, size.width)
     })
     .height(Length::Shrink);
 
@@ -136,7 +154,7 @@ struct TileStyle {
 fn resource_tile_content<'a>(
     res: &ResourceData,
     history: &[crate::services::GraphPointData],
-    measured_percent: Option<i32>,
+    meter: Meter,
     style: &TileStyle,
     width: f32,
 ) -> Element<'a, Message> {
@@ -160,7 +178,6 @@ fn resource_tile_content<'a>(
     };
     let subtitle = res.subtitle.clone();
     let value = res.value.clone();
-    let percent = measured_percent.map(|value| value.clamp(0, 100) as f32 / 100.0);
 
     // Live sample changes must not change tile height.
     let mut pair_tokens = TextPairTokens::from_palette(palette);
@@ -186,7 +203,16 @@ fn resource_tile_content<'a>(
     .spacing(enzui_theme::SpaceToken::Xxs.resolve(sp))
     .width(Length::Fill);
 
-    let meter = meter_bar(percent, accent, palette, style.animated);
+    let meter = match meter {
+        Meter::Measured(percent) => meter_bar(
+            percent.map(|value| value.clamp(0, 100) as f32 / 100.0),
+            accent,
+            palette,
+            style.animated,
+        ),
+        // Keeps the tile height equal to tiles with a meter.
+        Meter::Hidden => iced::widget::Space::new().height(METER_HEIGHT).into(),
+    };
 
     let text_half: Element<'a, Message> = column![label_stack, meter].spacing(sp.space3).into();
 
@@ -201,6 +227,7 @@ fn resource_tile_content<'a>(
     }
 }
 
+const METER_HEIGHT: f32 = 4.0;
 const MINI_CHART_MIN_TILE_WIDTH: f32 = 180.0;
 const MINI_CHART_W: f32 = 44.0;
 const MINI_CHART_H: f32 = 40.0;
@@ -258,7 +285,7 @@ fn meter_bar<'a>(
     enz_progress_bar_sampled(fraction.into())
         .animated(animated)
         .fill_color(accent)
-        .bar_height(4.0)
+        .bar_height(METER_HEIGHT)
         .bar_radius(2.0)
         .tokens(tokens)
         .into_element()

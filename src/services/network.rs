@@ -167,6 +167,9 @@ impl NetworkReading {
     pub(crate) fn capacity_percent(&self) -> Option<i32> {
         self.capacity.percent()
     }
+    pub(crate) fn has_link_speed(&self) -> bool {
+        self.speed.is_some()
+    }
 
     fn capacity_text(&self) -> String {
         let Some(speed) = self.speed else {
