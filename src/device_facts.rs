@@ -272,11 +272,11 @@ struct RootMount {
 
 fn root_mount() -> Option<RootMount> {
     let text = fs::read_to_string("/proc/self/mountinfo").ok()?;
+    let mount_point = crate::services::root_mount_point(&text);
     text.lines().find_map(|line| {
         let (left, right) = line.split_once(" - ")?;
         let mut left = left.split_whitespace();
-        let mount = left.nth(4)?;
-        if mount != "/" {
+        if left.nth(4)? != mount_point {
             return None;
         }
         let mut right = right.split_whitespace();
@@ -284,7 +284,7 @@ fn root_mount() -> Option<RootMount> {
         let device = nonempty(right.next()?)?;
         Some(RootMount {
             device,
-            mount: mount.to_owned(),
+            mount: "/".to_owned(),
             filesystem,
         })
     })

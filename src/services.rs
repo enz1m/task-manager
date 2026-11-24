@@ -26,7 +26,7 @@ pub(crate) use memory::{MemoryReading, MemoryUsage};
 
 mod disk;
 pub(crate) use disk::DiskIoCollector;
-pub(crate) use disk::{DiskActivity, DiskCapacity, DiskReading};
+pub(crate) use disk::{DiskActivity, DiskCapacity, DiskReading, root_mount_point};
 
 mod gpu;
 pub(crate) use gpu::{GpuBusy, GpuReading};
@@ -65,13 +65,13 @@ pub(crate) use collection::collect_processes_in;
 pub(crate) use collection::{
     collect_processes_local, collect_processes_with, collect_services_with, local_signal_target,
 };
-#[cfg(test)]
-pub(crate) use summaries::disk_summary_with;
 pub(crate) use summaries::{
     NetworkCollector, NetworkCounterBatch, NetworkCounterSample, collect_network_interfaces,
     cpu_model, cpu_resource, cpu_summary, disk_summary, format_bytes, format_disk_rate, format_mib,
     format_percent, format_rate, memory_summary, network_resource, uptime_text,
 };
+#[cfg(test)]
+pub(crate) use summaries::{disk_summary_with, sysfs_block_major_minor};
 mod fragments;
 pub(crate) use fragments::batch_fragment_paths_via;
 mod signals;

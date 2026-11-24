@@ -11,8 +11,30 @@ fn rounded_ratio(numerator: u128, denominator: u128) -> Option<u128> {
         .checked_div(denominator)
 }
 
+// Flatpak mounts a tmpfs at `/` and binds the host's /etc/os-release here.
+const SANDBOX_HOST_ROOT: &str = "/run/host/os-release";
+
+/// The mount point whose mountinfo entry and statvfs describe the root
+/// filesystem: `/` natively, or the host bind mount inside a Flatpak sandbox.
+pub(crate) fn root_mount_point(mountinfo: &str) -> &'static str {
+    let filesystem = |mount_point: &str| {
+        mountinfo.lines().find_map(|line| {
+            let (left, right) = line.split_once(" - ")?;
+            (left.split_whitespace().nth(4)? == mount_point)
+                .then(|| right.split_whitespace().next())
+                .flatten()
+        })
+    };
+    if filesystem("/") == Some("tmpfs") && filesystem(SANDBOX_HOST_ROOT).is_some() {
+        SANDBOX_HOST_ROOT
+    } else {
+        "/"
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct DiskIdentity {
+    mount_point: &'static str,
     mount_id: u64,
     major_minor: (u32, u32),
     device: String,
@@ -162,6 +184,11 @@ impl DiskReading {
     pub(crate) fn mount(&self) -> Option<&str> {
         self.identity.as_ref().map(|_| "/")
     }
+    pub(crate) fn capacity_path(&self) -> &'static str {
+        self.identity
+            .as_ref()
+            .map_or("/", |identity| identity.mount_point)
+    }
     pub(crate) fn filesystem(&self) -> Option<&str> {
         self.identity
             .as_ref()
@@ -270,10 +297,11 @@ fn root_identity(
     text: &str,
     resolve_device: impl FnOnce(&str) -> Option<(u32, u32)>,
 ) -> Option<DiskIdentity> {
+    let mount_point = root_mount_point(text);
     let mut roots = text
         .lines()
         .map(|line| line.split_whitespace().collect::<Vec<_>>())
-        .filter(|fields| fields.get(4).copied() == Some("/"));
+        .filter(|fields| fields.get(4).copied() == Some(mount_point));
     let fields = roots.next()?;
     if roots.next().is_some() {
         return None;
@@ -305,6 +333,7 @@ fn root_identity(
         major_minor = resolved;
     }
     Some(DiskIdentity {
+        mount_point,
         mount_id,
         major_minor,
         device,
@@ -312,7 +341,7 @@ fn root_identity(
     })
 }
 
-fn device_numbers(text: &str) -> Option<(u32, u32)> {
+pub(super) fn device_numbers(text: &str) -> Option<(u32, u32)> {
     let (major, minor) = text.split_once(':')?;
     Some((decimal(major)?, decimal(minor)?))
 }

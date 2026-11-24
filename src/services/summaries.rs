@@ -126,7 +126,9 @@ pub(crate) fn cpu_model() -> String {
 )]
 pub(crate) fn block_device_major_minor(path: &str) -> Option<(u32, u32)> {
     use std::os::unix::fs::{FileTypeExt, MetadataExt};
-    let metadata = fs::metadata(path).ok()?;
+    let Ok(metadata) = fs::metadata(path) else {
+        return sysfs_block_major_minor(Path::new("/sys/class/block"), path);
+    };
     if !metadata.file_type().is_block_device() {
         return None;
     }
@@ -137,6 +139,24 @@ pub(crate) fn block_device_major_minor(path: &str) -> Option<(u32, u32)> {
     ))
 }
 
+// Flatpak hides host device nodes but exposes sysfs block devices and dm names.
+pub(crate) fn sysfs_block_major_minor(class: &Path, path: &str) -> Option<(u32, u32)> {
+    let name = if let Some(mapped) = path.strip_prefix("/dev/mapper/") {
+        fs::read_dir(class).ok()?.flatten().find_map(|entry| {
+            let dm_name = fs::read_to_string(entry.path().join("dm/name")).ok()?;
+            (dm_name.trim_end() == mapped).then(|| entry.file_name())
+        })?
+    } else {
+        let name = path.strip_prefix("/dev/")?;
+        if name.contains('/') {
+            return None;
+        }
+        name.into()
+    };
+    let numbers = fs::read_to_string(class.join(name).join("dev")).ok()?;
+    disk::device_numbers(numbers.trim_end())
+}
+
 #[allow(
     unsafe_code,
     reason = "statvfs FFI uses a live CString and checked initialized output"
@@ -145,8 +165,8 @@ pub(crate) fn block_device_major_minor(path: &str) -> Option<(u32, u32)> {
     clippy::useless_conversion,
     reason = "libc integer widths vary across supported targets"
 )]
-pub(crate) fn root_capacity() -> Option<DiskCapacity> {
-    let path = std::ffi::CString::new("/").ok()?;
+pub(crate) fn filesystem_capacity(path: &str) -> Option<DiskCapacity> {
+    let path = std::ffi::CString::new(path).ok()?;
     let mut raw = std::mem::MaybeUninit::<libc::statvfs>::uninit();
     // SAFETY: `path` is a live NUL-terminated string and `raw` points to
     // writable storage for exactly one statvfs result.
@@ -172,7 +192,7 @@ pub(crate) fn disk_summary() -> DiskReading {
             let diskstats = fs::read_to_string("/proc/diskstats").ok();
             (mountinfo, diskstats, Instant::now())
         },
-        root_capacity(),
+        filesystem_capacity,
         block_device_major_minor,
     )
 }
@@ -180,7 +200,7 @@ pub(crate) fn disk_summary() -> DiskReading {
 pub(crate) fn disk_summary_with(
     collector: &Mutex<DiskIoCollector>,
     read: impl FnOnce() -> (Option<String>, Option<String>, Instant),
-    capacity: Option<DiskCapacity>,
+    capacity: impl FnOnce(&str) -> Option<DiskCapacity>,
     resolve_device: impl FnOnce(&str) -> Option<(u32, u32)>,
 ) -> DiskReading {
     let reading = match collector.lock() {
@@ -195,6 +215,7 @@ pub(crate) fn disk_summary_with(
         }
         Err(_) => DiskReading::default(),
     };
+    let capacity = capacity(reading.capacity_path());
     reading.with_capacity(capacity)
 }
 
