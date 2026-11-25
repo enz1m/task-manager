@@ -20,15 +20,15 @@ center = ["dep:enzui-agent"]
 
 
 [dependencies]
-enzui-activity = { git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
-iced = { default-features = false, features = ["wgpu", "tiny-skia", "crisp", "web-colors", "thread-pool", "linux-theme-detection", "wayland", "wayland-dlopen", "wayland-decorations", "canvas", "svg", "a11y", "tokio"], git = "https://github.com/enz1m/enzim-iced.git", rev = "523c1755479c55ba4030dafb2be9c05bf8a1def4" }
-iced_renderer = { default-features = false, git = "https://github.com/enz1m/enzim-iced.git", rev = "523c1755479c55ba4030dafb2be9c05bf8a1def4" }
-enzui-core = { features = ["accesskit", "perf-counter", "activation-native-iced"], git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
-enzui-services = { git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
-enzui-theme = { git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
-enzui-widgets = { features = ["application-dbus"], git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
-enzui-icons = { git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
-enzui-agent = { features = ["iced-consumer"], optional = true, git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
+enzui-activity = { git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
+iced = { default-features = false, features = ["wgpu", "tiny-skia", "crisp", "web-colors", "thread-pool", "linux-theme-detection", "wayland", "wayland-dlopen", "wayland-decorations", "canvas", "svg", "a11y", "tokio"], git = "https://github.com/enz1m/enzim-iced.git", rev = "838066d2e7373e87cfb42e62cca5a1dc9625b5f9" }
+iced_renderer = { default-features = false, git = "https://github.com/enz1m/enzim-iced.git", rev = "838066d2e7373e87cfb42e62cca5a1dc9625b5f9" }
+enzui-core = { features = ["accesskit", "perf-counter", "activation-native-iced"], git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
+enzui-services = { git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
+enzui-theme = { git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
+enzui-widgets = { features = ["application-dbus"], git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
+enzui-icons = { git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
+enzui-agent = { features = ["iced-consumer"], optional = true, git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["time", "rt"] }
@@ -38,9 +38,9 @@ log = "0.4"
 rustix = { version = "1.1", features = ["process", "event"] }
 
 [dev-dependencies]
-enzui-test-support = { git = "https://github.com/enz1m/enzui.git", rev = "0ed41783775a9bf1b431a7f5b57f782e30210552" }
+enzui-test-support = { git = "https://github.com/enz1m/enzui.git", rev = "46f267ecf6642423a7d716488200a5ceb8726655" }
 
-iced_test = { git = "https://github.com/enz1m/enzim-iced.git", rev = "523c1755479c55ba4030dafb2be9c05bf8a1def4" }
+iced_test = { git = "https://github.com/enz1m/enzim-iced.git", rev = "838066d2e7373e87cfb42e62cca5a1dc9625b5f9" }
 
 [patch.crates-io]
 zbus_macros = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "e182645b56d15e637bb6c8144f99ebfa7f900716" }
@@ -49,7 +49,7 @@ zvariant = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "e182645b56d
 zvariant_derive = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "e182645b56d15e637bb6c8144f99ebfa7f900716" }
 zvariant_utils = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "e182645b56d15e637bb6c8144f99ebfa7f900716" }
 zbus = { git = "https://github.com/enz1m/enzim-zbus.git", rev = "e182645b56d15e637bb6c8144f99ebfa7f900716" }
-winit = { git = "https://github.com/enz1m/enzim-winit.git", rev = "40eeb41f8637ef1620afa377ba006874224b6d65" }
+winit = { git = "https://github.com/enz1m/enzim-winit.git", rev = "405e1caca89357f6da20eafe7ed8abc686567092" }
 
 # Keep these aligned with the framework lint policy.
 [lints]
