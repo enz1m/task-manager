@@ -109,14 +109,8 @@ pub(crate) fn uptime_text() -> String {
 }
 
 pub(crate) fn cpu_model() -> String {
-    fs::read_to_string("/proc/cpuinfo")
-        .ok()
-        .and_then(|text| {
-            text.lines()
-                .find(|line| line.starts_with("model name"))
-                .and_then(|line| line.split_once(':'))
-                .map(|(_, model)| crate::device_facts::tidy_cpu_model(model))
-        })
+    let cpuinfo = fs::read_to_string("/proc/cpuinfo").ok();
+    crate::device_facts::cpu_model_with_soc(cpuinfo.as_deref())
         .unwrap_or_else(|| "Linux CPU".to_owned())
 }
 

@@ -102,7 +102,7 @@ fn collect_linux_device_facts() -> DeviceFacts {
     let gpu = crate::services::device_gpu_facts();
 
     DeviceFacts {
-        cpu_model: cpuinfo.as_deref().and_then(cpu_model),
+        cpu_model: cpu_model_with_soc(cpuinfo.as_deref()),
         cpu_topology: cpuinfo.as_deref().and_then(cpu_topology),
         cpu_temperature: None,
         memory_total: meminfo
@@ -138,6 +138,30 @@ fn cpu_model(text: &str) -> Option<String> {
             .then(|| tidy_cpu_model(value))
             .and_then(nonempty)
     })
+}
+
+pub(crate) fn cpu_model_with_soc(cpuinfo: Option<&str>) -> Option<String> {
+    let model = cpuinfo.and_then(cpu_model);
+    if model
+        .as_deref()
+        .is_some_and(|name| !name.starts_with("AArch64 Processor"))
+    {
+        return model;
+    }
+    soc_name(Path::new("/sys/devices/soc0")).or(model)
+}
+
+fn soc_name(directory: &Path) -> Option<String> {
+    let read = |file| {
+        fs::read_to_string(directory.join(file))
+            .ok()
+            .and_then(nonempty)
+    };
+    let machine = read("machine")?;
+    match read("family") {
+        Some(family) if !machine.starts_with(&family) => Some(format!("{family} {machine}")),
+        _ => Some(machine),
+    }
 }
 
 pub(crate) fn tidy_cpu_model(model: &str) -> String {
