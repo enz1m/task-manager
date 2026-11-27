@@ -107,6 +107,7 @@ fn main() -> iced::Result {
         return Ok(());
     }
     enzui_core::crash_report::CrashReporter::for_app("task-manager-app", env!("CARGO_PKG_VERSION"));
+    services::seed_startup_cpu_baseline();
     let _ = enzui_widgets::monospace_fallback::install_monospace_fallback();
 
     enzui_core::logging::init_default();

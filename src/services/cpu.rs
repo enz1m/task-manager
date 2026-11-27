@@ -93,58 +93,84 @@ pub(crate) fn cpu_breakdown_from_samples(
 
 // Allow roughly 50 USER_HZ ticks per core before publishing the first delta.
 pub(crate) const CPU_PRIME_INTERVAL: Duration = Duration::from_millis(500);
+const MAX_BOOT_BASELINE_AGE: Duration = Duration::from_secs(1);
 
 fn read_cpu_stat() -> Option<CpuStatSnapshot> {
     parse_cpu_stat(&fs::read_to_string("/proc/stat").ok()?)
 }
 
-pub(crate) fn prime_cpu_breakdown_with<R, S>(
-    first: &CpuStatSnapshot,
-    mut read: R,
-    sleep: S,
-) -> (CpuBreakdown, Option<CpuStatSnapshot>)
-where
-    R: FnMut() -> Option<CpuStatSnapshot>,
-    S: FnOnce(Duration),
-{
-    sleep(CPU_PRIME_INTERVAL);
-    match read() {
-        Some(second) => (cpu_breakdown_from_samples(first, &second), Some(second)),
-        None => (CpuBreakdown::default(), None),
+pub(crate) struct CpuBaseline {
+    pub(crate) counters: CpuStatSnapshot,
+    pub(crate) read_at_boot: Option<Instant>,
+}
+
+static CPU_STAT_PREVIOUS: Mutex<Option<CpuBaseline>> = Mutex::new(None);
+
+pub(crate) fn seed_startup_cpu_baseline() {
+    if let Ok(mut baseline) = CPU_STAT_PREVIOUS.lock()
+        && baseline.is_none()
+        && let Some(counters) = read_cpu_stat()
+    {
+        *baseline = Some(CpuBaseline {
+            counters,
+            read_at_boot: Some(Instant::now()),
+        });
     }
 }
 
 pub(crate) fn collect_cpu_breakdown() -> CpuBreakdown {
-    let cache = CPU_STAT_PREVIOUS.get_or_init(|| Mutex::new(None));
-    let Ok(mut previous) = cache.lock() else {
+    let Ok(mut previous) = CPU_STAT_PREVIOUS.lock() else {
         return CpuBreakdown::default();
     };
     // Reading under the cache lock keeps concurrent collectors in sample order.
-    collect_cpu_breakdown_with(&mut previous, read_cpu_stat, std::thread::sleep)
+    collect_cpu_breakdown_with(
+        &mut previous,
+        read_cpu_stat,
+        std::thread::sleep,
+        Instant::now(),
+    )
 }
 
 pub(crate) fn collect_cpu_breakdown_with<R, S>(
-    previous: &mut Option<CpuStatSnapshot>,
+    previous: &mut Option<CpuBaseline>,
     mut read: R,
     sleep: S,
+    now: Instant,
 ) -> CpuBreakdown
 where
     R: FnMut() -> Option<CpuStatSnapshot>,
     S: FnOnce(Duration),
 {
-    let Some(current) = read() else {
-        *previous = None;
-        return CpuBreakdown::default();
-    };
-    let breakdown = match previous.as_ref() {
-        Some(previous) => cpu_breakdown_from_samples(previous, &current),
+    let previous_sample = previous.take().filter(|sample| {
+        sample
+            .read_at_boot
+            .is_none_or(|boot| now.saturating_duration_since(boot) <= MAX_BOOT_BASELINE_AGE)
+    });
+    let (first, wait) = match previous_sample {
+        Some(sample) => (
+            sample.counters,
+            sample.read_at_boot.map_or(Duration::ZERO, |boot| {
+                CPU_PRIME_INTERVAL.saturating_sub(now.saturating_duration_since(boot))
+            }),
+        ),
         None => {
-            let (breakdown, second) = prime_cpu_breakdown_with(&current, read, sleep);
-            *previous = second;
-            return breakdown;
+            let Some(first) = read() else {
+                return CpuBreakdown::default();
+            };
+            (first, CPU_PRIME_INTERVAL)
         }
     };
-    *previous = Some(current);
+    if !wait.is_zero() {
+        sleep(wait);
+    }
+    let Some(current) = read() else {
+        return CpuBreakdown::default();
+    };
+    let breakdown = cpu_breakdown_from_samples(&first, &current);
+    *previous = Some(CpuBaseline {
+        counters: current,
+        read_at_boot: None,
+    });
     breakdown
 }
 

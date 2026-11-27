@@ -44,7 +44,6 @@ pub(crate) use prefetch_types::{
 };
 mod prefetch_pool;
 pub(crate) use prefetch_pool::{PrefetchOwner, run_prefetch_jobs};
-static CPU_STAT_PREVIOUS: OnceLock<Mutex<Option<CpuStatSnapshot>>> = OnceLock::new();
 static NETWORK_PREVIOUS: OnceLock<Mutex<NetworkCollector>> = OnceLock::new();
 static DISK_IO_PREVIOUS: OnceLock<Mutex<DiskIoCollector>> = OnceLock::new();
 
@@ -106,14 +105,14 @@ pub(crate) use snapshot::{
     ProcessTarget, ResourceData, SampleScope, ServiceData, Snapshot, decode_process_state,
 };
 mod cpu;
-#[cfg(test)]
-pub(crate) use cpu::collect_cpu_breakdown_with;
+pub(crate) use cpu::CpuTimes;
 #[cfg(test)]
 pub(crate) use cpu::parse_cpu_stat;
-pub(crate) use cpu::{CpuStatSnapshot, CpuTimes};
+#[cfg(test)]
+pub(crate) use cpu::{CpuBaseline, collect_cpu_breakdown_with};
 pub(crate) use cpu::{
     DeviceGpuFacts, collect_cpu_breakdown, collect_thread_total, device_gpu_facts, gpu_summary,
-    gpu_vendor_name,
+    gpu_vendor_name, seed_startup_cpu_baseline,
 };
 use network::NetworkIdentity;
 pub(crate) use network::NetworkReading;
